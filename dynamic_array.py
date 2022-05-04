@@ -162,14 +162,12 @@ def reduce(function, lst, initializer=None):
     it = iterator(lst)
     if initializer is None:
         try:
-            value = it()
+            value = next(it)
         except StopIteration:
             raise TypeError("reduce() of empty sequence with no initial value") from None
     else:
         value = initializer
-    for i in range(lst.length()-1) if initializer is None \
-            else range(lst.length()):
-        element = it()
+    for element in it:
         value = function(value, element)
     return value
 
