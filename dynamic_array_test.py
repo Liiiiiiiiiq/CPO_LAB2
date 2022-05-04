@@ -134,15 +134,15 @@ class TestDynamicArray(unittest.TestCase):
         lst = from_list(x)
         tmp = []
         try:
-            get_next = iterator(lst)
+            it = iterator(lst)
             while True:
-                tmp.append(get_next())
+                tmp.append(next(it))
         except StopIteration:
             pass
         self.assertEqual(x, tmp)
         self.assertEqual(to_list(lst), tmp)
-        get_next = iterator(empty())
-        self.assertRaises(StopIteration, lambda: get_next())
+        it = iterator(empty())
+        self.assertRaises(StopIteration, lambda: next(it))
 
     def test_empty(self):
         # llq
