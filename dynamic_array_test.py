@@ -121,7 +121,8 @@ class TestDynamicArray(unittest.TestCase):
         da = from_list(a)
         db = from_list(b)
         dc = from_list(c)
-        self.assertEqual(concat(concat(da, db), dc), concat(da, concat(db, dc)))
+        self.assertEqual(concat(concat(da, db), dc),
+                         concat(da, concat(db, dc)))
 
     @given(st.lists(st.integers()))
     def test_monoid_identity(self, lst):
