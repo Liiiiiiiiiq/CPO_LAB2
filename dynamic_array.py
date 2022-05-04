@@ -129,22 +129,44 @@ def from_list(v):
 
 def find(lst, p):
     # wzm
-    pass
+    for k in lst:
+        if p(k):
+            return True
+    return False
 
 
-def filter(lst, p):
+def filter(function, lst):
     # wzm
-    pass
+    res = DynamicArray()
+    for k in lst:
+        if function(k):
+            res.add_element(k)
+    return res
 
 
-def map(lst, p):
+def map(function, *iters):
     # wzm
-    pass
+    res = DynamicArray()
+    for args in zip(*iters):
+       res.add_element(function(*args))
+    return res
 
 
-def reduce(lst, p):
+def reduce(function, lst, initializer=None):
     # wzm
-    pass
+    it = iterator(lst)
+    if initializer is None:
+        try:
+            value = it()
+        except StopIteration:
+            raise TypeError("reduce() of empty sequence with no initial value") from None
+    else:
+        value = initializer
+    for i in range(lst.length()-1) if initializer is None \
+            else range(lst.length()):
+        element = it()
+        value = function(value, element)
+    return value
 
 
 def iterator(lst):

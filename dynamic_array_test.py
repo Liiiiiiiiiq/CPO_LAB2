@@ -1,11 +1,9 @@
 import unittest
-import random
 from hypothesis import given
 
 import hypothesis.strategies as st
 
 from dynamic_array import *
-from functools import reduce
 
 
 class TestDynamicArray(unittest.TestCase):
@@ -74,22 +72,61 @@ class TestDynamicArray(unittest.TestCase):
         # llq
         self.assertEqual(to_list(from_list(a)), a)
 
+    def test_find(self):
+        # wzm
+        a = [1, 3, 4, None, 4]
+        b = from_list(a)
+        self.assertEqual(find(a, lambda x: x is None), True)
+        self.assertEqual(find(a, lambda x: x % 2 == 0), True)
+        self.assertEqual(find(a, lambda x: x % 2 != 0), True)
+        self.assertEqual(find(a, lambda x: x == 2), False)
+
     @given(st.lists(st.integers()))
     def test_filter(self, a):
         # wzm
-        pass
+        from builtins import filter as gt_filter
+        arr = from_list(a)
+        result = list(gt_filter(lambda x: x % 2 == 0, a))
+        self.assertEqual(to_list(filter(lambda x: x % 2 == 0, arr)), result)
+        result = list(gt_filter(lambda x: x % 2 != 0, a))
+        self.assertEqual(to_list(filter(lambda x: x % 2 != 0, arr)), result)
 
     @given(st.lists(st.integers()),
            st.lists(st.integers()),
            st.lists(st.integers()))
     def test_map(self, a, b, c):
         # wzm
-        pass
+        from builtins import map as gt_map
+        arr = from_list(a)
+        result = list(gt_map(lambda x: x ** 2, a))
+        self.assertEqual(to_list(map(lambda x: x ** 2, arr)), result)
+        result = list(gt_map(lambda x, y: x + y, a, b))
+        arr1 = from_list(b)
+        self.assertEqual(to_list(map(lambda x, y: x + y, arr, arr1)), result)
+        arr2 = from_list(c)
+        result = list(gt_map(lambda x, y, z: x + y - z, a, b, c))
+        self.assertEqual(to_list(map(lambda x, y, z: x + y - z, arr, arr1, arr2)), result)
+        a = [1, 2, 3]
+        arr_0 = from_list(a)
+        c = [1, None, 9]
+        arr_1 = from_list(c)
+        with self.assertRaises(TypeError):
+            map(lambda x, y: x + y, arr_0, arr_1)
 
     @given(st.lists(st.integers()), st.integers())
     def test_reduce(self, a, b):
         # wzm
-        pass
+        arr = from_list(a)
+        if arr.length() == 0:
+            self.assertEqual(b,reduce(lambda x, y: x + y, arr, b))
+            with self.assertRaises(TypeError):
+                reduce(lambda x, y: x + y, arr)
+        else:
+            from functools import reduce as gt_reduce
+            result = gt_reduce(lambda x, y: x + y, a)
+            self.assertEqual(reduce(lambda x, y: x + y, arr), result)
+            result = gt_reduce(lambda x, y: x + y, a, b)
+            self.assertEqual(reduce(lambda x, y: x + y, arr, b), result)
 
     def test_iter(self):
         # llq
