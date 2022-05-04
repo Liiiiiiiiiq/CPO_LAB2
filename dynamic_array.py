@@ -17,10 +17,6 @@ class DynamicArray(object):
         self.__chunk[self.__length] = element
         self.__length += 1
 
-    def get_chunk(self):
-        # Used to read elements in a dynamic array
-        return [self.__chunk[i] for i in range(self.__length)]
-
     def length(self):
         return self.__length
 
@@ -28,9 +24,8 @@ class DynamicArray(object):
         assert type(other) == DynamicArray
         if self.__length != other.length():
             return False
-        t = other.get_chunk()
-        for i in range(self.__length):
-            if self.__chunk[i] != t[i]:
+        for a, b in zip(self, other):
+            if a != b:
                 return False
         return True
 
@@ -38,12 +33,20 @@ class DynamicArray(object):
         return str(self.__chunk[:self.__length])
 
     def __iter__(self):
-        a = DynamicArray()
-        for i in range(self.__length):
-            a.add_element(self.__chunk[i])
-        return a
+        return DynamicArrayIterator(self.__chunk, self.__length)
+
+
+class DynamicArrayIterator(object):
+    def __init__(self, lst, lng):
+        self.__chunk = lst
+        self.__length = lng
+        self.__start_num = -1
+
+    def __iter__(self):
+        return self
 
     def __next__(self):
+        # wzm
         self.__start_num += 1
         if self.__start_num >= self.__length:
             raise StopIteration()
@@ -66,10 +69,9 @@ def remove(lst, p):
     if p < 0 or p >= lst.length():
         raise Exception('The location accessed is not in the array!')
     res = DynamicArray()
-    chunk = lst.get_chunk()
-    for i in range(lst.length()):
-        if i != p:
-            res.add_element(chunk[i])
+    for idx, i in enumerate(lst):
+        if idx != p:
+            res.add_element(i)
     return res
 
 
@@ -81,18 +83,19 @@ def length(lst):
 def member(lst, v):
     # llq
     assert type(lst) == DynamicArray
-    chunk = lst.get_chunk()
-    return v in chunk
+    for k in lst:
+        if v == k:
+            return True
+    return False
 
 
 def reverse(lst):
     # llq
     assert type(lst) == DynamicArray
-    res = DynamicArray()
-    chunk = lst.get_chunk()[::-1]
-    for k in chunk:
-        res.add_element(k)
-    return res
+    tmp = []
+    for k in lst:
+        tmp.append(k)
+    return from_list(tmp[::-1])
 
 
 def set(lst, p, v):
@@ -103,19 +106,21 @@ def set(lst, p, v):
     if p < 0 or p >= lst.length():
         raise Exception('The location accessed is not in the array!')
     res = DynamicArray()
-    chunk = lst.get_chunk()
-    for i in range(lst.length()):
-        if p == i:
+    for idx, i in enumerate(lst):
+        if p == idx:
             res.add_element(v)
         else:
-            res.add_element(chunk[i])
+            res.add_element(i)
     return res
 
 
 def to_list(lst):
     # llq
     assert type(lst) == DynamicArray
-    return lst.get_chunk()
+    res = []
+    for k in lst:
+        res.append(k)
+    return res
 
 
 def from_list(v):
@@ -150,18 +155,7 @@ def reduce(lst, p):
 def iterator(lst):
     # llq
     assert type(lst) == DynamicArray
-    pos = 0
-    chunk = lst.get_chunk()
-
-    def get_next():
-        nonlocal pos
-        if pos == lst.length():
-            raise StopIteration
-        tmp = chunk[pos]
-        pos += 1
-        return tmp
-
-    return get_next
+    return iter(lst)
 
 
 def empty():
@@ -173,8 +167,8 @@ def concat(lst1, lst2):
     # llq
     assert type(lst1) == DynamicArray and type(lst2) == DynamicArray
     res = DynamicArray()
-    for k in lst1.get_chunk():
+    for k in lst1:
         res.add_element(k)
-    for k in lst2.get_chunk():
+    for k in lst2:
         res.add_element(k)
     return res
