@@ -105,7 +105,8 @@ class TestDynamicArray(unittest.TestCase):
         self.assertEqual(to_list(map(lambda x, y: x + y, arr, arr1)), result)
         arr2 = from_list(c)
         result = list(gt_map(lambda x, y, z: x + y - z, a, b, c))
-        self.assertEqual(to_list(map(lambda x, y, z: x + y - z, arr, arr1, arr2)), result)
+        self.assertEqual(to_list(map(lambda x, y, z: x + y - z, arr,
+                                     arr1, arr2)), result)
         a = [1, 2, 3]
         arr_0 = from_list(a)
         c = [1, None, 9]
@@ -118,7 +119,7 @@ class TestDynamicArray(unittest.TestCase):
         # wzm
         arr = from_list(a)
         if arr.length() == 0:
-            self.assertEqual(b,reduce(lambda x, y: x + y, arr, b))
+            self.assertEqual(b, reduce(lambda x, y: x + y, arr, b))
             with self.assertRaises(TypeError):
                 reduce(lambda x, y: x + y, arr)
         else:

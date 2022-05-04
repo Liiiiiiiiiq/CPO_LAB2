@@ -153,7 +153,7 @@ def map(function, *iters):
     # wzm
     res = DynamicArray()
     for args in zip(*iters):
-       res.add_element(function(*args))
+        res.add_element(function(*args))
     return res
 
 
@@ -164,7 +164,8 @@ def reduce(function, lst, initializer=None):
         try:
             value = next(it)
         except StopIteration:
-            raise TypeError("reduce() of empty sequence with no initial value") from None
+            raise TypeError("reduce() of empty sequence with no "
+                            "initial value") from None
     else:
         value = initializer
     for element in it:
