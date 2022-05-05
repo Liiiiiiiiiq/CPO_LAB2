@@ -74,6 +74,13 @@ None
 
 ### Compare mutable and immutable implementation
 
-- mutable
+-Mutable data refers to a database structure in which data can be changed.
+ Any data changes made simply overwrite and replace the previous record.
+ This means that previous iterations of data are lost unless there is
+ a system of back-ups and transaction logs that track changes.
 
-- immutable
+- Immutable data cannot be changed, meaning that the values inside
+ them can't be added, removed, moved or swapped. Instead of changing
+ the data structure you make a new version of the data structure
+ which is a separate value. Such data structure more relevant for
+ multi-thread programming. 
