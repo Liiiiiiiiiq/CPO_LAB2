@@ -3,7 +3,11 @@ from hypothesis import given
 
 import hypothesis.strategies as st
 
-from dynamic_array import *
+from dynamic_array import DynamicArray
+from dynamic_array import cons, remove, length, member
+from dynamic_array import reverse, set, to_list, from_list
+from dynamic_array import find, filter, map, reduce
+from dynamic_array import iterator, empty, concat
 
 
 class TestDynamicArray(unittest.TestCase):
@@ -75,11 +79,10 @@ class TestDynamicArray(unittest.TestCase):
     def test_find(self):
         # wzm
         a = [1, 3, 4, None, 4]
-        b = from_list(a)
-        self.assertEqual(find(a, lambda x: x is None), True)
-        self.assertEqual(find(a, lambda x: x % 2 == 0), True)
-        self.assertEqual(find(a, lambda x: x % 2 != 0), True)
-        self.assertEqual(find(a, lambda x: x == 2), False)
+        self.assertTrue(find(a, lambda x: x is None))
+        self.assertTrue(find(a, lambda x: x % 2 == 0))
+        self.assertTrue(find(a, lambda x: x % 2 != 0))
+        self.assertFalse(find(a, lambda x: x == 2))
 
     @given(st.lists(st.integers()))
     def test_filter(self, a):
