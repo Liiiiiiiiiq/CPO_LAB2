@@ -7,8 +7,6 @@ class DynamicArray(object):
         self.__chunk = [None] * self.__capacity
 
     def add_element(self, element):
-        if element is not None and type(element) != int:
-            raise Exception('Input data must be int or None')
         if self.__length == self.__capacity:
             new_chunk_size = int(self.__capacity * self.__grow_factor) \
                              - self.__capacity
@@ -21,7 +19,6 @@ class DynamicArray(object):
         return self.__length
 
     def __eq__(self, other):
-        assert type(other) == DynamicArray
         if self.__length != other.length():
             return False
         for a, b in zip(self, other):
@@ -55,17 +52,14 @@ class DynamicArrayIterator(object):
 
 def cons(lst, v):
     # llq
-    assert type(lst) == DynamicArray
-    res = DynamicArray()
-    for k in lst:
-        res.add_element(k)
+    import copy
+    res = copy.deepcopy(lst)
     res.add_element(v)
     return res
 
 
 def remove(lst, p):
     # llq
-    assert type(lst) == DynamicArray
     if p < 0 or p >= lst.length():
         raise Exception('The location accessed is not in the array!')
     res = DynamicArray()
@@ -82,7 +76,6 @@ def length(lst):
 
 def member(lst, v):
     # llq
-    assert type(lst) == DynamicArray
     for k in lst:
         if v == k:
             return True
@@ -91,7 +84,6 @@ def member(lst, v):
 
 def reverse(lst):
     # llq
-    assert type(lst) == DynamicArray
     tmp = []
     for k in lst:
         tmp.append(k)
@@ -100,7 +92,6 @@ def reverse(lst):
 
 def set(lst, p, v):
     # llq
-    assert type(lst) == DynamicArray
     if v is not None and type(v) != int:
         raise Exception('Input data must be int or None')
     if p < 0 or p >= lst.length():
@@ -116,7 +107,6 @@ def set(lst, p, v):
 
 def to_list(lst):
     # llq
-    assert type(lst) == DynamicArray
     res = []
     for k in lst:
         res.append(k)
@@ -125,7 +115,6 @@ def to_list(lst):
 
 def from_list(v):
     # llq
-    assert type(v) == list
     res = DynamicArray()
     for k in v:
         res.add_element(k)
@@ -175,7 +164,6 @@ def reduce(function, lst, initializer=None):
 
 def iterator(lst):
     # llq
-    assert type(lst) == DynamicArray
     return iter(lst)
 
 
@@ -186,7 +174,6 @@ def empty():
 
 def concat(lst1, lst2):
     # llq
-    assert type(lst1) == DynamicArray and type(lst2) == DynamicArray
     res = DynamicArray()
     for k in lst1:
         res.add_element(k)
