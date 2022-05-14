@@ -1,108 +1,92 @@
 class DynamicArray(object):
-    def __init__(self, capacity=10, grow_factor=1.2):
-        self.__grow_factor = grow_factor
-        self.__length = 0
-        self.__capacity = capacity  # Initialize chunk size to 10
-        self.__start_num = -1
-        self.__chunk = [None] * self.__capacity
-
-    def add_element(self, element):
-        if self.__length == self.__capacity:
-            new_chunk_size = int(self.__capacity * self.__grow_factor) \
-                             - self.__capacity
-            self.__chunk += [None] * new_chunk_size
-            self.__capacity = self.__capacity + new_chunk_size
-        self.__chunk[self.__length] = element
-        self.__length += 1
-
-    def length(self):
-        return self.__length
+    def __init__(self, val="", nxt=None):
+        # val="" means empty node
+        self.value = val
+        self.next = nxt
 
     def __eq__(self, other):
-        if self.__length != other.length():
+        if other.value == '':
+            return self.value == ''
+        if self.value != other.value:
             return False
-        for a, b in zip(self, other):
-            if a != b:
-                return False
-        return True
+        return self.next == other.next
 
-    def __str__(self):
-        return str(self.__chunk[:self.__length])
+    def __str__(self, is_first=True):
+        """
+        In order to print out the symbol [ and ], the is_first
+        variable is added to determine whether it is the first number
+        """
+        if self.value != '':
+            return "[{}{}".format(self.value, self.next.__str__(False)) if is_first \
+                else ", {}{}".format(self.value, self.next.__str__(False))
+        else:
+            return '[]' if is_first else ']'
 
     def __iter__(self):
-        return DynamicArrayIterator(self.__chunk, self.__length)
+        return DynamicArrayIterator(self)
 
 
 class DynamicArrayIterator(object):
-    def __init__(self, lst, lng):
-        self.__chunk = lst
-        self.__length = lng
-        self.__start_num = -1
+    def __init__(self, pos):
+        self.__pos = pos
 
     def __iter__(self):
         return self
 
     def __next__(self):
         # wzm
-        self.__start_num += 1
-        if self.__start_num >= self.__length:
+        if self.__pos.value == '':
             raise StopIteration()
-        return self.__chunk[self.__start_num]
+        res = self.__pos.value
+        self.__pos = self.__pos.next
+        return res
 
 
-def cons(lst, v):
+def cons(v, lst):
     # llq
-    import copy
-    res = copy.deepcopy(lst)
-    res.add_element(v)
-    return res
+    return DynamicArray(v, lst)
 
 
 def remove(lst, p):
     # llq
-    if p < 0 or p >= lst.length():
+    if lst.value == '':
         raise Exception('The location accessed is not in the array!')
-    res = DynamicArray()
-    for idx, i in enumerate(lst):
-        if idx != p:
-            res.add_element(i)
-    return res
+    if p == 0:
+        return lst.next
+    return cons(lst.value, remove(lst.next, p - 1))
 
 
 def length(lst):
     # llq
-    return lst.length()
+    if lst.value == '':
+        return 0
+    else:
+        return 1 + length(lst.next)
 
 
-def member(lst, v):
+def member(v, lst):
     # llq
-    for k in lst:
-        if v == k:
-            return True
-    return False
+    if lst.value == '':
+        return False
+    if lst.value == v:
+        return True
+    return member(v, lst.next)
 
 
-def reverse(lst):
+def reverse(lst, acc=DynamicArray()):
     # llq
-    tmp = []
-    for k in lst:
-        tmp.append(k)
-    return from_list(tmp[::-1])
+    if lst.value == '':
+        return acc
+    return reverse(lst.next, DynamicArray(lst.value, acc))
 
 
 def set(lst, p, v):
     # llq
-    if v is not None and type(v) != int:
-        raise Exception('Input data must be int or None')
-    if p < 0 or p >= lst.length():
+    if lst.value == '' or p < 0:
         raise Exception('The location accessed is not in the array!')
-    res = DynamicArray()
-    for idx, i in enumerate(lst):
-        if p == idx:
-            res.add_element(v)
-        else:
-            res.add_element(i)
-    return res
+    if p == 0:
+        return cons(v, lst.next)
+    return cons(lst.value, set(lst.next, p - 1, v))
 
 
 def to_list(lst):
@@ -115,10 +99,9 @@ def to_list(lst):
 
 def from_list(v):
     # llq
-    res = DynamicArray()
-    for k in v:
-        res.add_element(k)
-    return res
+    if len(v) == 0:
+        return empty()
+    return cons(v[0], from_list(v[1:]))
 
 
 def find(lst, p):
@@ -174,9 +157,13 @@ def empty():
 
 def concat(lst1, lst2):
     # llq
-    res = DynamicArray()
-    for k in lst1:
-        res.add_element(k)
-    for k in lst2:
-        res.add_element(k)
-    return res
+    if lst2.value == '':
+        return lst1
+    return _concat_inner(reverse(lst1), lst2)
+
+
+def _concat_inner(lst1, lst2):
+    # llq
+    if lst1.value == '':
+        return lst2
+    return _concat_inner(lst1.next, cons(lst1.value, lst2))

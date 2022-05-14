@@ -14,47 +14,43 @@ class TestDynamicArray(unittest.TestCase):
 
     def test_api(self):
         empty_ = DynamicArray()
-
-        l1 = cons(cons(empty_, 1), None)
-        l2 = cons(cons(empty_, None), 1)
+        l1 = cons(None, cons(1, empty_))
+        l2 = cons(1, cons(None, empty_))
         self.assertEqual(str(empty_), "[]")
-        self.assertEqual(str(l1), "[1, None]")
-        self.assertEqual(str(l2), "[None, 1]")
+        self.assertEqual(str(l1), "[None, 1]")
+        self.assertEqual(str(l2), "[1, None]")
         self.assertNotEqual(empty_, l1)
         self.assertNotEqual(empty_, l2)
         self.assertNotEqual(l1, l2)
-        self.assertEqual(l1, cons(cons(empty_, 1), None))
+        self.assertEqual(l1, cons(None, cons(1, empty_)))
         self.assertEqual(length(empty_), 0)
         self.assertEqual(length(l1), 2)
-
         self.assertEqual(length(l2), 2)
-        self.assertEqual(str(remove(l1, 0)), "[None]")
-        self.assertEqual(str(remove(l1, 1)), "[1]")
-        self.assertFalse(member(empty_, None))
-        self.assertTrue(member(l1, None))
-        self.assertTrue(member(l1, 1))
-        self.assertFalse(member(l1, 2))
+        self.assertEqual(str(remove(l1, 0)), "[1]")
+        self.assertEqual(str(remove(l1, 1)), "[None]")
+        self.assertFalse(member(None, empty_))
+        self.assertTrue(member(None, l1))
+        self.assertTrue(member(1, l1))
+        self.assertFalse(member(2, l1))
         self.assertEqual(l1, reverse(l2))
-        self.assertEqual(to_list(l1), [1, None])
-        self.assertEqual(l1, from_list([1, None]))
-        self.assertEqual(concat(l1, l2), from_list([1, None, None, 1]))
+        self.assertEqual(to_list(l1), [None, 1])
+        self.assertEqual(l1, from_list([None, 1]))
+        self.assertEqual(concat(l1, l2), from_list([None, 1, 1, None]))
         buf = []
         for e in l1:
             buf.append(e)
-        self.assertEqual(buf, [1, None])
+        self.assertEqual(buf, [None, 1])
         lst = to_list(l1) + to_list(l2)
-        for e in l1:
-            lst.remove(e)
-        for e in l2:
-            lst.remove(e)
+        for e in l1: lst.remove(e)
+        for e in l2: lst.remove(e)
         self.assertEqual(lst, [])
 
     def test_set(self):
         # llq
         empty_ = DynamicArray()
 
-        l1 = cons(cons(empty_, 1), None)
-        l2 = cons(cons(empty_, 2), 1)
+        l1 = cons(1, cons(None, empty_))
+        l2 = cons(2, cons(1, empty_))
 
         self.assertEqual(str(set(l1, 0, None)), '[None, None]')
         self.assertEqual(str(set(l2, 1, 2)), '[2, 2]')
@@ -171,3 +167,13 @@ class TestDynamicArray(unittest.TestCase):
         a = from_list(lst)
         self.assertEqual(concat(empty(), a), a)
         self.assertEqual(concat(a, empty()), a)
+
+    def test_immutability(self):
+        a = from_list([1, 2, 3, 4, 5, 6, 7, 8, 3, 2])
+        # do some operations on a
+        cons(22, a)
+        remove(a, 8)
+        set(a, 0, 88)
+        reverse(a)
+        cons(a, from_list([111, 222]))
+        self.assertEqual(str(a), '[1, 2, 3, 4, 5, 6, 7, 8, 3, 2]')
