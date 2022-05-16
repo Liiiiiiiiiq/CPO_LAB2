@@ -41,8 +41,10 @@ class TestDynamicArray(unittest.TestCase):
             buf.append(e)
         self.assertEqual(buf, [None, 1])
         lst = to_list(l1) + to_list(l2)
-        for e in l1: lst.remove(e)
-        for e in l2: lst.remove(e)
+        for e in l1:
+            lst.remove(e)
+        for e in l2:
+            lst.remove(e)
         self.assertEqual(lst, [])
 
     def test_set(self):
@@ -117,7 +119,7 @@ class TestDynamicArray(unittest.TestCase):
     def test_reduce(self, a, b):
         # wzm
         arr = from_list(a)
-        if arr.length() == 0:
+        if length(arr) == 0:
             self.assertEqual(b, reduce(lambda x, y: x + y, arr, b))
             with self.assertRaises(TypeError):
                 reduce(lambda x, y: x + y, arr)

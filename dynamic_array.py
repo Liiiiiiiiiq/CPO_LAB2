@@ -115,18 +115,18 @@ def find(lst, p):
 def filter(function, lst):
     # wzm
     res = DynamicArray()
-    for k in lst:
-        if function(k):
-            res.add_element(k)
-    return res
+    for v in lst:
+        if function(v):
+            res = cons(v, res)
+    return reverse(res)
 
 
 def map(function, *iters):
     # wzm
     res = DynamicArray()
     for args in zip(*iters):
-        res.add_element(function(*args))
-    return res
+        res = cons(function(*args), res)
+    return reverse(res)
 
 
 def reduce(function, lst, initializer=None):
