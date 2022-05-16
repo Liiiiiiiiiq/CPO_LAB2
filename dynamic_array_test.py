@@ -180,4 +180,3 @@ class TestDynamicArray(unittest.TestCase):
         set(a, 0, 88)
         reverse(a)
         self.assertEqual(str(a), '[1, 2, 3, 4, 5, 6, 7, 8, 3, 2]')
-

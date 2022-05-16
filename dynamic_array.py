@@ -26,7 +26,8 @@ class DynamicArrayIterator(object):
 
 
 class DynamicArray(object):
-    def __init__(self, val: DeType = "", nxt: Optional['DynamicArray'] = None) -> None:
+    def __init__(self, val: DeType = "",
+                 nxt: Optional['DynamicArray'] = None) -> None:
         # val="" means empty node
         self.value = val
         self.next = nxt
@@ -75,7 +76,7 @@ def remove(lst: Optional['DynamicArray'], p: int) -> Optional['DynamicArray']:
 def length(lst: Optional['DynamicArray']) -> int:
     # llq
     if lst is None:
-        return 0;
+        return 0
     if lst.value == '':
         return 0
     else:
@@ -206,7 +207,7 @@ def concat(lst1: Optional['DynamicArray'],
 
 
 def _concat_inner(lst1: Optional['DynamicArray'],
-           lst2: Optional['DynamicArray']) \
+                  lst2: Optional['DynamicArray']) \
         -> Optional['DynamicArray']:
     # llq
     if lst1 is None or lst2 is None:
@@ -214,4 +215,3 @@ def _concat_inner(lst1: Optional['DynamicArray'],
     if lst1.value == '':
         return lst2
     return _concat_inner(lst1.next, cons(lst1.value, lst2))
-
