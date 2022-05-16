@@ -17,7 +17,8 @@ class DynamicArray(object):
         variable is added to determine whether it is the first number
         """
         if self.value != '':
-            return "[{}{}".format(self.value, self.next.__str__(False)) if is_first \
+            return "[{}{}".format(self.value, self.next.__str__(False)) \
+                if is_first \
                 else ", {}{}".format(self.value, self.next.__str__(False))
         else:
             return '[]' if is_first else ']'
