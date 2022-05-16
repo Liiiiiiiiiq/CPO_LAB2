@@ -15,10 +15,8 @@ variant 2 aims to implement dynamic array using Python.
 
 ## Features
 
-- `cons(lst, v)`: copy array `lst` as a new one and add
- a new element `v` to the end of the new.
- If `capacity == length`,it will allocate a new chunk of memory
- by user-specified growing factor.
+- `cons(lst, v)`: keep `lst` constant, get a new array that add
+ a new element `v` to the start of the new.
 - `remove(lst, pos)`: keep `lst` constant, return a new array
  that remove element at `pos`.
 - `length(lst)`: return the length of `lst`.
@@ -55,6 +53,10 @@ variant 2 aims to implement dynamic array using Python.
 
 ## Changelog
 
+- 16.5.2022 21:15 -7
+  - Add type hints and docstrings.
+- 14.5.2022 15:00 -6
+  - Update immutable.
 - 3.5.2022 19:00 -5
   - Wang Zimeng update `README.md`.
 - 3.5.2022 17:44 -4

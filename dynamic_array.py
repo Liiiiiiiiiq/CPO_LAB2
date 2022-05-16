@@ -8,14 +8,17 @@ Default = Union['DynamicArray', None]
 
 
 class DynamicArrayIterator(object):
+    """ An iterator object of DynamicArray. """
+
     def __init__(self, pos: Default) -> None:
         self.__pos = pos
 
     def __iter__(self) -> 'DynamicArrayIterator':
+        """ Implement iter(self). """
         return self
 
     def __next__(self) -> DeType:
-        # wzm
+        """ Implement next(self). """
         if self.__pos is None:
             raise TypeError()
         if self.__pos.value == '':
@@ -26,13 +29,20 @@ class DynamicArrayIterator(object):
 
 
 class DynamicArray(object):
+    """ Immutable dynamic array Implementation """
+
     def __init__(self, val: DeType = "",
                  nxt: Optional['DynamicArray'] = None) -> None:
-        # val="" means empty node
+        """ Create an instance of DynamicArray.
+
+        :param val: the value of node, equals "" means empty node.
+        :param nxt: next node.
+        """
         self.value = val
         self.next = nxt
 
     def __eq__(self, other: 'object') -> bool:
+        """ The array whether equals other array. """
         if not isinstance(other, DynamicArray):
             return NotImplemented
         if other.value == '':
@@ -58,12 +68,12 @@ class DynamicArray(object):
 
 
 def cons(v: DeType, lst: Optional['DynamicArray']) -> 'DynamicArray':
-    # llq
+    """ Insert a value at start of array. """
     return DynamicArray(v, lst)
 
 
 def remove(lst: Optional['DynamicArray'], p: int) -> Optional['DynamicArray']:
-    # llq
+    """ Remove value at position p of array. """
     if lst is None:
         return None
     if lst.value == '':
@@ -74,7 +84,7 @@ def remove(lst: Optional['DynamicArray'], p: int) -> Optional['DynamicArray']:
 
 
 def length(lst: Optional['DynamicArray']) -> int:
-    # llq
+    """ Return the length of array. """
     if lst is None:
         return 0
     if lst.value == '':
@@ -84,7 +94,7 @@ def length(lst: Optional['DynamicArray']) -> int:
 
 
 def member(v: DeType, lst: Optional['DynamicArray']) -> bool:
-    # llq
+    """ Determines whether the given value is a member of array. """
     if lst is None:
         return False
     if lst.value == '':
@@ -97,6 +107,7 @@ def member(v: DeType, lst: Optional['DynamicArray']) -> bool:
 def reverse(lst: Optional['DynamicArray'],
             acc: Optional['DynamicArray'] = DynamicArray()) \
         -> Optional['DynamicArray']:
+    """ Reverse array. """
     # llq
     if lst is None:
         return empty()
@@ -107,7 +118,7 @@ def reverse(lst: Optional['DynamicArray'],
 
 def set(lst: Optional['DynamicArray'], p: int, v: DeType) \
         -> Optional['DynamicArray']:
-    # llq
+    """ Add an element into the array at specified position. """
     if lst is None or lst.value == '' or p < 0:
         raise Exception('The location accessed is not in the array!')
     if p == 0:
@@ -116,7 +127,7 @@ def set(lst: Optional['DynamicArray'], p: int, v: DeType) \
 
 
 def to_list(lst: Optional['DynamicArray']) -> list[Any]:
-    # llq
+    """ Transform an array to a list. """
     if lst is None:
         return []
     res = []
@@ -126,14 +137,14 @@ def to_list(lst: Optional['DynamicArray']) -> list[Any]:
 
 
 def from_list(v: list[Any]) -> 'DynamicArray':
-    # llq
+    """ Transform a list to an array. """
     if len(v) == 0:
         return empty()
     return cons(v[0], from_list(v[1:]))
 
 
 def find(lst: Optional['DynamicArray'], p: Callable[[Any], Any]) -> bool:
-    # wzm
+    """ Find element by specific predicate. """
     if lst is None:
         return False
     for k in lst:
@@ -144,7 +155,7 @@ def find(lst: Optional['DynamicArray'], p: Callable[[Any], Any]) -> bool:
 
 def filter(function: Callable[[Any], Any],
            lst: Optional['DynamicArray']) -> Optional['DynamicArray']:
-    # wzm
+    """ Filter an array by specific predicate. """
     if lst is None:
         return None
     res = DynamicArray()
@@ -156,7 +167,12 @@ def filter(function: Callable[[Any], Any],
 
 def map(function: Callable[..., Any], *iters: 'DynamicArray') \
         -> Optional['DynamicArray']:
-    # wzm
+    """ Applied function to every item of instances of DynamicArray,
+         yielding the results. If additional instance arguments are passed,
+         function must take that many arguments and is applied to the items
+         from all instances in parallel. With multiple instances, the map
+         stops when the shortest instance is exhausted.
+    """
     res = DynamicArray()
     for args in zip(*iters):
         res = cons(function(*args), res)
@@ -166,7 +182,16 @@ def map(function: Callable[..., Any], *iters: 'DynamicArray') \
 def reduce(function: Callable[[Any, Any], Any],
            lst: Optional['DynamicArray'],
            initializer: Optional[int] = None) -> DeType:
-    # wzm
+    """ Apply function of two arguments cumulatively to the items of the
+            array, from left to right, to reduce the array to a single value.
+
+    :param function: Callable.
+    :param lst: array.
+    :param initial: If the optional initializer is present, it is placed
+        before the items of the array in the calculation, and serves as
+        a default when the array is empty. If initializer is not given
+        and array contains only one item, the first item is returned.
+    """
     it = iterator(lst)
     if it is None:
         raise TypeError()
@@ -184,21 +209,21 @@ def reduce(function: Callable[[Any, Any], Any],
 
 
 def iterator(lst: Optional['DynamicArray']) -> 'DynamicArrayIterator':
-    # llq
+    """ Return an iterator of DynamicArray. """
     if lst is None:
         raise StopIteration()
     return iter(lst)
 
 
 def empty() -> 'DynamicArray':
-    # llq
+    """ Return an empty instance of DynamicArray """
     return DynamicArray()
 
 
 def concat(lst1: Optional['DynamicArray'],
            lst2: Optional['DynamicArray']) \
         -> Optional['DynamicArray']:
-    # llq
+    """ Concat two array. """
     if lst1 is None or lst2 is None:
         raise TypeError()
     if lst2.value == '':
@@ -209,7 +234,7 @@ def concat(lst1: Optional['DynamicArray'],
 def _concat_inner(lst1: Optional['DynamicArray'],
                   lst2: Optional['DynamicArray']) \
         -> Optional['DynamicArray']:
-    # llq
+    """ Called by concat, monoid implement. """
     if lst1 is None or lst2 is None:
         raise TypeError()
     if lst1.value == '':
