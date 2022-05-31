@@ -24,7 +24,7 @@ variant 2 aims to implement dynamic array using Python.
  the element `v` is a member of `lst`.
 - `reverse(lst)`:  keep `lst` constant, return a reverse array of `lst`.
 - `set(lst, pos, v)`: copy array `lst` as a new one and
- set a new element `v` at `pos`
+ set a new element `v` at `pos`.
 - `to_list(lst)`: convert `lst` to built-in `list`.
 - `from_list(list)`: convert from built-in `list`.
 - `find(lst, pred)`: find element by specific predicate, return a boolean value.
